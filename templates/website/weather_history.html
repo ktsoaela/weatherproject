@@ -1,0 +1,39 @@
+{% extends 'website/index.html' %}
+
+{% block content %}
+<nav class="navbar navbar-light bg-light justify-content-between">
+  <a class="navbar-brand" href="{% url 'search' %}">Home</a>
+
+
+</nav>
+
+<section class="col-12 py-5">
+  <div class="col-lg-4  mx-auto my-auto">
+  <h1>Weather History</h1>
+  </div>
+  <div class="col-lg-4  mx-auto my-auto">
+    <table class="table table-striped table-dark">
+      <thead>
+        <tr>
+          <th>Coordinates</th>
+          <th>City</th>
+          <th>Temperature</th>
+          <th>Feels Like</th>
+          <th>Humidity</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for datum in data %}
+          <tr>
+            <td>{{ datum.coordinates }}</td>
+            <td>{{ datum.city }}</td>
+            <td>{{ datum.temperature }}</td>
+            <td>{{ datum.feels_like }}</td>
+            <td>{{ datum.humidity }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

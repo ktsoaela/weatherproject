@@ -1,0 +1,96 @@
+{% extends 'website/index.html' %}
+
+{% block content %}
+
+ 
+<nav class="navbar navbar-light bg-light justify-content-between">
+  <a class="navbar-brand" href="{% url 'search' %}">
+    <button type="submit" id="btnSearch"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1.5em" width="1.5em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0 0 11.6 0l43.6-43.5a8.2 8.2 0 0 0 0-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"></path>
+      </svg>
+    </button>
+  </a>
+
+
+</nav>
+
+  <section class="col-12 py-5">
+      
+
+
+      
+  
+    <div class="jumbotron bg-dark text-white col-6 mx-auto py-5">
+      <div class="col-12 row">
+        <form method="POST" action="{% url 'store_weather_data' %}" class="col-md-4 mx-auto">
+          {% csrf_token %}
+          <input type="hidden" name="coordinates" value="{{ coordinates }}">
+          <input type="hidden" name="city" value="{{ city }}">
+          <input type="hidden" name="temp" value="{{ current_weather.temp }}">
+          <input type="hidden" name="feels_like" value="{{ current_weather.feels_like }}">
+          <input type="hidden" name="humidity" value="{{ current_weather.humidity }}">
+          {% for hourly_data in hourly_forecast %} <td>
+            <input type="hidden" name="hourly_temp[]" value="{{ hourly_data.dt }}">
+            <input type="hidden" name="hourly_temp[]" value="{{ hourly_data.temp }}">
+            <input type="hidden" name="hourly_feels_like[]" value="{{ hourly_data.feels_like }}">
+            <input type="hidden" name="hourly_humidity[]" value="{{ hourly_data.humidity }}">
+          {% endfor %}
+          <a type="submit"  class="btn btn-primary">Save Data</a>
+
+          <a href="{% url 'weather_history' %}" class="btn btn-primary">View Weather History</a>
+
+
+
+          
+        </form>
+      </div>
+      <h1>Weather in {{ city }}</h1>
+      <p><i>{{ city }}</i></p>
+    
+    
+      <h2>Current Weather</h2>
+      <p>Temperature: {{ current_weather.temp }} &deg;C</p>
+      <p>Feels like: {{ current_weather.feels_like }} &deg;C</p>
+      <p>Humidity: {{ current_weather.humidity }} %</p>
+    
+    </div>
+  </section>
+
+
+  <br>
+  <section class="col-12">
+    <h1>Hourly Forecast</h1>
+
+    <table class="table table-striped table-dark">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Time</th>
+          <th scope="col">Temperature</th>
+          <th scope="col">Image</th>
+          <th scope="col">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tbody>
+          {% for hourly_data in hourly_forecast %}
+            <tr>
+              <td></td>
+              <td>{{ hourly_data.dt | date:"Y-m-d H:i:s"| date:"SHORT_DATETIME_FORMAT" }}</td>
+              <td>{{ hourly_data.temp }} &deg;C</td>
+              <td>{{ hourly_data.weather.0.main }}</td>
+              <td>{{ hourly_data.weather.0.description }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </tbody>
+    </table>
+  </section>
+
+
+  
+
+
+
+  
+{% endblock %}
